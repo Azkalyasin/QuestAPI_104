@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">APK SISWA</string>
     <string name="entry_siswa">Tambah Siswa</string>
     <string name="back">back</string>
     <string name="nama">Nama Siswa*</string>

@@ -26,7 +26,7 @@ data class DetailSiswa (
 )
 
 
-fun DetailSiswa.toDateSiswa(): DataSiswa = DataSiswa(
+fun DetailSiswa.toDataSiswa(): DataSiswa = DataSiswa(
     id = id,
     nama = nama,
     alamat = alamat,

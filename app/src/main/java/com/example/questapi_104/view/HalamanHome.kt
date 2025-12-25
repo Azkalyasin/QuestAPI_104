@@ -41,6 +41,7 @@ import com.example.questapi_104.viewmodel.HomeViewModel
 import com.example.questapi_104.viewmodel.provider.PenyediaViewModel
 import com.example.questapi_104.viewmodel.StatusUiSiswa
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -52,6 +53,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -73,13 +75,13 @@ fun HomeScreen(
                     contentDescription = stringResource(R.string.entry_siswa)
                 )
             }
-        },
+        }
     ) { innerPadding ->
         HomeBody(
             statusUiSiswa = viewModel.listSiswa,
             onSiswaClick = navigateToItemUpdate,
             retryAction = viewModel::loadSiswa,
-            modifier = modifier
+            modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
         )
@@ -89,7 +91,7 @@ fun HomeScreen(
 @Composable
 fun HomeBody(
     statusUiSiswa: StatusUiSiswa,
-    //edit 2.3 : tambahkan parameter onSiswaClick
+    //edit 2.3 tambahkan parameter onSiswaClick
     onSiswaClick: (Int) -> Unit,
     retryAction: () -> Unit,
     modifier: Modifier = Modifier
@@ -101,13 +103,13 @@ fun HomeBody(
         when (statusUiSiswa) {
             is StatusUiSiswa.Loading -> LoadingScreen()
             //edit 2.5 : tambahkan event onSiswaClick
-            is StatusUiSiswa.Success -> DaftarSiswa(
-                itemSiswa = statusUiSiswa.siswa,
+            is StatusUiSiswa.Success -> DataSiswa(
+                siswa = statusUiSiswa.siswa,
                 onSiswaClick = { onSiswaClick(it.id) }
             )
             is StatusUiSiswa.Error -> ErrorScreen(
                 retryAction,
-                modifier = modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize()
             )
         }
     }
@@ -123,7 +125,10 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ErrorScreen(retryAction: () -> Unit, modifier: Modifier = Modifier) {
+fun ErrorScreen(
+    retryAction: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
@@ -134,25 +139,25 @@ fun ErrorScreen(retryAction: () -> Unit, modifier: Modifier = Modifier) {
             modifier = Modifier.padding(16.dp)
         )
         Button(onClick = retryAction) {
-            Text(stringResource(R.string.retry))
+            Text(text = stringResource(R.string.retry))
         }
     }
 }
 
 @Composable
-fun DaftarSiswa(
-    itemSiswa: List<DataSiswa>,
+fun DataSiswa(
+    siswa: List<DataSiswa>,
     //edit 2.1 : tambahkan parameter onSiswaClick
     onSiswaClick: (DataSiswa) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(modifier = Modifier) {
-        items(items = itemSiswa, key = { it.id }) { person ->
+    LazyColumn(modifier = modifier) {
+        items(items = siswa, key = { it.id }) { person ->
             ItemSiswa(
                 siswa = person,
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.padding_small))
-                    //edit 2.2 jadikan itemsiswa menjadi clickable()
+                    //edit 2.2 : jadikan itemsiswa menjadi clickable
                     .clickable { onSiswaClick(person) }
             )
         }
@@ -169,8 +174,7 @@ fun ItemSiswa(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
-            modifier = Modifier
-                .padding(dimensionResource(id = R.dimen.padding_large)),
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
             verticalArrangement = Arrangement.spacedBy(
                 dimensionResource(id = R.dimen.padding_small)
             )
@@ -182,7 +186,7 @@ fun ItemSiswa(
                     text = siswa.nama,
                     style = MaterialTheme.typography.titleLarge
                 )
-                Spacer(Modifier.weight(1f))
+                Spacer(modifier = Modifier.weight(1f))
                 Icon(
                     imageVector = Icons.Default.Phone,
                     contentDescription = null
